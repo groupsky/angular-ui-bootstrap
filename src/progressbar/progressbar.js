@@ -19,9 +19,15 @@ angular.module('ui.bootstrap.progressbar', [])
 
         this.bars.push(bar);
 
+        bar.max = $scope.max;
+
         bar.$watch('value', function( value ) {
-            bar.percent = +(100 * value / $scope.max).toFixed(2);
+            bar.recalculatePercentage();
         });
+
+        bar.recalculatePercentage = function() {
+            bar.percent = +(100 * bar.value / bar.max).toFixed(2);
+        };
 
         bar.$on('$destroy', function() {
             element = null;
@@ -32,6 +38,14 @@ angular.module('ui.bootstrap.progressbar', [])
     this.removeBar = function(bar) {
         this.bars.splice(this.bars.indexOf(bar), 1);
     };
+
+    $scope.$watch('max', (function(self){
+        return function(max) {
+            self.bars.forEach(function (bar) {
+                bar.max = $scope.max;
+                bar.recalculatePercentage();
+            });
+        }})(this));
 }])
 
 .directive('progress', function() {
@@ -41,7 +55,9 @@ angular.module('ui.bootstrap.progressbar', [])
         transclude: true,
         controller: 'ProgressController',
         require: 'progress',
-        scope: {},
+        scope: {
+          max: '=?'
+        },
         templateUrl: 'template/progressbar/progress.html'
     };
 })
@@ -54,7 +70,6 @@ angular.module('ui.bootstrap.progressbar', [])
         require: '^progress',
         scope: {
             value: '=',
-            max: '=?',
             type: '@'
         },
         templateUrl: 'template/progressbar/bar.html',
