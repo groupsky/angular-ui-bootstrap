@@ -45,7 +45,8 @@ angular.module('ui.bootstrap.progressbar', [])
                 bar.max = $scope.max;
                 bar.recalculatePercentage();
             });
-        }})(this));
+        };
+    })(this));
 }])
 
 .directive('progress', function() {
