@@ -39,14 +39,12 @@ angular.module('ui.bootstrap.progressbar', [])
         this.bars.splice(this.bars.indexOf(bar), 1);
     };
 
-    $scope.$watch('max', (function(self){
-        return function(max) {
-            self.bars.forEach(function (bar) {
-                bar.max = $scope.max;
-                bar.recalculatePercentage();
-            });
-        };
-    })(this));
+    $scope.$watch('max', function(max) {
+        self.bars.forEach(function (bar) {
+            bar.max = $scope.max;
+            bar.recalculatePercentage();
+        });
+    });
 }])
 
 .directive('progress', function() {
